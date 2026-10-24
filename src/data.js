@@ -160,9 +160,17 @@ export const LIST = [
   e("mandogrogu", "newrepublic", "Film", "Star Wars: The Mandalorian and Grogu", "May 22, 2026", 0, "Continues the story from The Mandalorian Season 3"),
 
   /* ---- The Sequel Era ---- */
-  e("resistance1", "sequels", "Animated", "Star Wars Resistance — Season 1", "Oct 2018–Mar 2019", 21, "Starts before The Force Awakens and runs past it. Lucasfilm's guide lists the whole series first"),
-  e("resistance2", "sequels", "Animated", "Star Wars Resistance — Season 2", "Oct 2019–Jan 2020", 19),
-  e("tfa", "sequels", "Film", "Star Wars: The Force Awakens", "Dec 18, 2015"),
+  e("resistance1", "sequels", "Animated", "Star Wars Resistance — Season 1 (Episodes 1–19)", "Oct 2018–Mar 2019", 19,
+    "Starts about six months before The Force Awakens. Watch up to here, then pause for the movie"),
+  e("tfa", "sequels", "Film", "Star Wars: The Force Awakens", "Dec 18, 2015",
+    0, "The Resistance finale shows the First Order's Starkiller Base attack from the show's side"),
+  e("resistance1finale", "sequels", "Animated", "Star Wars Resistance — Season 1 Finale", "Mar 2019", 2,
+    "Right after the movie: Kaz and Torra watch Hux's broadcast and the destruction of the Hosnian system",
+    { epInfo: [
+      { season: 1, num: 20, title: "No Escape, Part I", code: "S1 E20" },
+      { season: 1, num: 21, title: "No Escape, Part II", code: "S1 E21" },
+    ] }),
+  e("resistance2", "sequels", "Animated", "Star Wars Resistance — Season 2", "Oct 2019–Jan 2020", 19, "Runs alongside the rest of the sequel trilogy; kept before The Last Jedi as in Lucasfilm's guide"),
   e("tlj", "sequels", "Film", "Star Wars: The Last Jedi", "Dec 15, 2017"),
   e("tros", "sequels", "Film", "Star Wars: The Rise of Skywalker", "Dec 20, 2019"),
 ];

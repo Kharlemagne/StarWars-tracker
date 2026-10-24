@@ -68,7 +68,7 @@ const ANCHORS = [
   "acolyte", "tpm", "aotc", "tcw-prelude", "tcw-movie", "tcw-cadets", "tcw-siege", "rots",
   "bb1", "bb3", "maul1", "solo", "obiwan", "andor1", "rebels1", "rogueone",
   "anh", "esb", "rotj", "mando1", "bobf", "mando3", "ahsoka1", "skeletoncrew", "mandogrogu",
-  "resistance1", "tfa", "tlj", "tros",
+  "resistance1", "tfa", "resistance1finale", "resistance2", "tlj", "tros",
 ];
 let prev = -1;
 ANCHORS.forEach((id) => {

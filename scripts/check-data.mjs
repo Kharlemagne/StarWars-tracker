@@ -65,8 +65,8 @@ D.LIST.filter((x) => x.id.startsWith("tcw-")).forEach((x) => { if (!x.group) err
 
 // 5. anchor order from Lucasfilm's published guide — these must stay in this relative order
 const ANCHORS = [
-  "acolyte", "tpm", "aotc", "tcw-prelude", "tcw-movie", "tcw-cadets", "tcw-siege", "tojedi", "rots",
-  "tote", "totu", "bb1", "bb3", "maul1", "solo", "obiwan", "andor1", "rebels1", "rogueone",
+  "acolyte", "tpm", "aotc", "tcw-prelude", "tcw-movie", "tcw-cadets", "tcw-siege", "rots",
+  "bb1", "bb3", "maul1", "solo", "obiwan", "andor1", "rebels1", "rogueone",
   "anh", "esb", "rotj", "mando1", "bobf", "mando3", "ahsoka1", "skeletoncrew", "mandogrogu",
   "resistance1", "tfa", "tlj", "tros",
 ];

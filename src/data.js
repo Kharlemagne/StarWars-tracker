@@ -34,9 +34,9 @@ export const ERAS = [
   { key: "prequels", short: "Prequels", title: "The Prequel Era", span: "32–22 BBY", color: "#60A5FA",
     blurb: "The two films that open the story of Anakin Skywalker and set up the Clone Wars." },
   { key: "clonewars", short: "Clone Wars", title: "The Clone Wars", span: "22–19 BBY", color: "#A78BFA",
-    blurb: "The 2008 film, then every episode in Lucasfilm's chronological order — not release order — followed by Tales of the Jedi. The list jumps between seasons on purpose, so just follow the numbers. Group names are editorial: arcs keep a story name, and one-off episodes get a title of their own." },
+    blurb: "The 2008 film, then every episode in Lucasfilm's chronological order — not release order — ending with the Siege of Mandalore. The list jumps between seasons on purpose, so just follow the numbers. Group names are editorial: arcs keep a story name, and one-off episodes get a title of their own." },
   { key: "empire", short: "Rise of the Empire", title: "Rise of the Empire", span: "19 BBY onward", color: "#F87171",
-    blurb: "Revenge of the Sith, the birth of the Empire, and the stories that follow: anthology shorts, the Bad Batch, and Maul." },
+    blurb: "Revenge of the Sith, the birth of the Empire, and and the stories that follow: the Bad Batch and Maul." },
   { key: "imperial", short: "Imperial Era", title: "The Imperial Era", span: "13–0 BBY", color: "#FB923C",
     blurb: "From Solo to Rogue One, as the Rebellion takes shape." },
   { key: "original", short: "Original Trilogy", title: "The Original Trilogy", span: "0–4 ABY", color: "#E5E7EB",
@@ -126,13 +126,9 @@ export const LIST = [
     "Season 7's opening arc — a different thing from the Bad Batch series later in this list"),
   arc("tcw-siege", "The Siege of Mandalore", ["709 Old Friends Not Forgotten", "710 The Phantom Apprentice", "711 Shattered", "712 Victory and Death"],
     "Runs at the same time as Revenge of the Sith, and Order 66 happens during it. Lucasfilm's guide puts Revenge of the Sith right after the series"),
-  e("tojedi", "clonewars", "Anthology", "Star Wars: Tales of the Jedi", "Oct 26, 2022", 6,
-    "An anthology that jumps around in time. Lucasfilm's guide places it after The Clone Wars and before Revenge of the Sith"),
 
   /* ---- Rise of the Empire ---- */
   e("rots", "empire", "Film", "Star Wars: Revenge of the Sith", "May 19, 2005"),
-  e("tote", "empire", "Anthology", "Star Wars: Tales of the Empire", "May 4, 2024", 6, "Follows Morgan Elsbeth and Barriss Offee"),
-  e("totu", "empire", "Anthology", "Star Wars: Tales of the Underworld", "May 4, 2025", 6, "Follows Asajj Ventress and Cad Bane"),
   e("bb1", "empire", "Animated", "The Bad Batch — Season 1", "May–Aug 2021", 16),
   e("bb2", "empire", "Animated", "The Bad Batch — Season 2", "Jan–Mar 2023", 16),
   e("bb3", "empire", "Animated", "The Bad Batch — Season 3", "Feb–May 2024", 15),
@@ -173,6 +169,15 @@ export const LIST = [
 
 // Optional canon that isn't in Lucasfilm's chronological list. Not counted toward progress.
 export const EXTRAS = [
+  e("tojedi", "extras", "Anthology", "Star Wars: Tales of the Jedi", "Oct 26, 2022", 6,
+    "Anthology shorts that jump around in time. Watch after you finish, or slot in once the exact placement is confirmed",
+    { optional: true }),
+  e("tote", "extras", "Anthology", "Star Wars: Tales of the Empire", "May 4, 2024", 6,
+    "Follows Morgan Elsbeth and Barriss Offee. Episodes are spread across the timeline, so it's an optional watch for now",
+    { optional: true }),
+  e("totu", "extras", "Anthology", "Star Wars: Tales of the Underworld", "May 4, 2025", 6,
+    "Follows Asajj Ventress and Cad Bane. Episodes are spread across the timeline, so it's an optional watch for now",
+    { optional: true }),
   e("yja", "extras", "Animated", "Young Jedi Adventures", "2023–2025", 55,
     "A preschool series set in the High Republic era, centuries before the films. Seasons of 25, 23 and 7 episodes",
     { optional: true }),

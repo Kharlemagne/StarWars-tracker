@@ -42,7 +42,7 @@ Open `src/config.js` and confirm your Ko-fi link, GitHub repo link and version n
 
 ## Editorial notes
 
-- Order follows Lucasfilm's chronological guide on StarWars.com. Anthology series are placed as whole series, with two deliberate exceptions: **The Mandalorian** is split by season (Season 3 comes after The Book of Boba Fett) and **The Clone Wars** is split by episode.
+- Order follows Lucasfilm's chronological guide on StarWars.com. The three **Tales of...** anthologies (Jedi, Empire, Underworld) are in Optional Extras because their episodes are spread across the timeline; they will move into the main list episode by episode once placement is confirmed. Two other deliberate splits: **The Mandalorian** is split by season (Season 3 comes after The Book of Boba Fett) and **The Clone Wars** is split by episode.
 - Clone Wars **arc names are editorial groupings** of neighbouring episodes, not official titles.
 - Season 7's Siege of Mandalore runs concurrently with Revenge of the Sith; the list follows the official guide.
 - **Not tracked:** Legends content, Forces of Destiny, Visions, and upcoming releases that haven't premiered.

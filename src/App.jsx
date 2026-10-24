@@ -651,7 +651,7 @@ export default function StarWarsTracker() {
         </div>
 
         <div className="foot">
-          <p className="footNote">Progress is saved in this browser on this device — it stays until you clear it here or clear your browser's site data. Use Export to back it up or move it to another device. Order follows Lucasfilm's chronological guide on StarWars.com; anthology series are placed as whole series, as in the guide.</p>
+          <p className="footNote">Progress is saved in this browser on this device — it stays until you clear it here or clear your browser's site data. Use Export to back it up or move it to another device. Order follows Lucasfilm's chronological guide on StarWars.com; the Tales of... anthologies are kept in Optional Extras until their episodes are placed.</p>
           {resetArm ? (
             <span>
               <button className="reset resetArmed" onClick={purge}>Yes, erase everything</button>{" "}

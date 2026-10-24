@@ -60,6 +60,9 @@ Object.keys(cw).forEach((k) => {
   if (!SEASON_SIZES[s] || n < 1 || n > SEASON_SIZES[s]) err(`Clone Wars has an episode that shouldn't exist: S${s} E${n}`);
 });
 
+// 4b. every Clone Wars entry needs a group name (the heading it is shown under)
+D.LIST.filter((x) => x.id.startsWith("tcw-")).forEach((x) => { if (!x.group) err(`Clone Wars entry "${x.id}" has no group name in CW_GROUPS`); });
+
 // 5. anchor order from Lucasfilm's published guide — these must stay in this relative order
 const ANCHORS = [
   "acolyte", "tpm", "aotc", "tcw-prelude", "tcw-movie", "tcw-cadets", "tcw-siege", "tojedi", "rots",

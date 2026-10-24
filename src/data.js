@@ -34,7 +34,7 @@ export const ERAS = [
   { key: "prequels", short: "Prequels", title: "The Prequel Era", span: "32–22 BBY", color: "#60A5FA",
     blurb: "The two films that open the story of Anakin Skywalker and set up the Clone Wars." },
   { key: "clonewars", short: "Clone Wars", title: "The Clone Wars", span: "22–19 BBY", color: "#A78BFA",
-    blurb: "The 2008 film, then every episode in Lucasfilm's chronological order — not release order — followed by Tales of the Jedi. The list jumps between seasons on purpose, so just follow the numbers. Arc names are editorial groupings of episodes that sit next to each other." },
+    blurb: "The 2008 film, then every episode in Lucasfilm's chronological order — not release order — followed by Tales of the Jedi. The list jumps between seasons on purpose, so just follow the numbers. Group names are editorial: arcs keep a story name, and one-off episodes get a title of their own." },
   { key: "empire", short: "Rise of the Empire", title: "Rise of the Empire", span: "19 BBY onward", color: "#F87171",
     blurb: "Revenge of the Sith, the birth of the Empire, and the stories that follow: anthology shorts, the Bad Batch, and Maul." },
   { key: "imperial", short: "Imperial Era", title: "The Imperial Era", span: "13–0 BBY", color: "#FB923C",
@@ -188,6 +188,34 @@ export const UPCOMING = [
 export const STORAGE_KEY = "starwars-tracker-v1";
 
 /* ---------------- DERIVED ---------------- */
+/* ---------------- CLONE WARS GROUP NAMES ----------------
+   Each Clone Wars entry is shown under a group heading. Entries that share a name sit under one heading
+   (the 2008 film joins "Opening Moves"). Names are editorial: "... Arc" for multi-episode stories,
+   evocative titles for one-off episodes. Changing a name never affects saved progress. */
+const CW_GROUPS = {
+  "tcw-prelude": "Opening Moves", "tcw-movie": "Opening Moves",
+  "tcw-cadets": "Kamino Arc", "tcw-ambush": "Early Campaigns", "tcw-malevolence": "Malevolence Arc",
+  "tcw-rookies": "Clone Rookies", "tcw-r3s6": "R3-S6 Arc", "tcw-bombad": "Nute Gunray Arc",
+  "tcw-dooku": "Florrum Arc", "tcw-crash": "Maridun Arc", "tcw-trespass": "Uninvited Guests",
+  "tcw-virus": "Blue Shadow Virus Arc", "tcw-ryloth": "Ryloth Arc", "tcw-holocron": "Holocron Arc",
+  "tcw-bountyhunters": "Hired Guns", "tcw-zillo": "Zillo Beast Arc", "tcw-senatespy": "Mole in the Senate",
+  "tcw-geonosis": "Geonosis Arc", "tcw-grievous": "Saleucami Arc", "tcw-lightsaber": "The Missing Blade",
+  "tcw-mandalore": "Mandalore Arc I", "tcw-deathtrap": "Boba Fett Arc", "tcw-corruption": "Mandalore Arc II",
+  "tcw-assassin": "Fatal Premonition", "tcw-arctroopers": "Kamino Defense", "tcw-sphere": "Quiet Diplomacy",
+  "tcw-evilplans": "Ziro's Scheme", "tcw-hostage": "Cad Bane Strikes", "tcw-ziro": "Fugitive Hutt",
+  "tcw-heroes": "Senate Arc", "tcw-senatemurders": "Murder in the Senate", "tcw-nightsisters": "Nightsisters Arc",
+  "tcw-mortis": "Mortis Arc", "tcw-citadel": "Citadel Arc", "tcw-padawan": "Wookiee Hunt Arc",
+  "tcw-moncala": "Mon Cala Arc", "tcw-shadowwarrior": "Warrior in the Shadows", "tcw-mercy": "C-3PO & R2-D2 Arc",
+  "tcw-umbara": "Umbara Arc", "tcw-zygerria": "Zygerria Arc", "tcw-friend": "Call for Help",
+  "tcw-undercover": "Obi-Wan Undercover Arc", "tcw-massacre": "Fall of the Nightsisters",
+  "tcw-bounty": "A Price on Their Heads", "tcw-brothers": "Maul Returns Arc", "tcw-onderon": "Onderon Arc",
+  "tcw-younglings": "Young Jedi Arc", "tcw-dsquad": "D-Squad Arc", "tcw-revival": "Return of the Shadow",
+  "tcw-eminence": "Shadow Collective Arc", "tcw-trial": "Ahsoka's Trial Arc", "tcw-conspiracy": "Protocol 66 Arc",
+  "tcw-clovis": "Rush Clovis Arc", "tcw-disappeared": "The Disappeared Arc", "tcw-yoda": "Yoda's Journey",
+  "tcw-walkabout": "Ahsoka's Walkabout Arc", "tcw-badbatch": "Bad Batch Arc", "tcw-siege": "Siege of Mandalore",
+};
+LIST.forEach((x) => { if (CW_GROUPS[x.id]) x.group = CW_GROUPS[x.id]; });
+
 export const ALL_ENTRIES = LIST; // the main chronological list, in order
 export const ENTRY_BY_ID = Object.fromEntries([...LIST, ...EXTRAS].map((x) => [x.id, x]));
 // 1-based position of each entry in the chronological list (shown as #01, #02 …)

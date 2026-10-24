@@ -28,7 +28,16 @@ const progress = (entries, state) => {
 };
 
 const SECTIONS = ERAS.map((era) => ({ ...era, entries: LIST.filter((x) => x.era === era.key) }));
-const SERIES_IDS = [...LIST, ...EXTRAS].filter((x) => x.eps > 0).map((x) => x.id);
+const SERIES_IDS = [...LIST, ...EXTRAS].filter((x) => x.eps > 0 && !x.group).map((x) => x.id);
+// Clone Wars rows are numbered 1..134 in Lucasfilm's chronological order (the film counts as one)
+const CW_POS = {};
+{
+  let n = 0;
+  LIST.filter((x) => x.group).forEach((x) => {
+    if (x.eps > 0) x.epInfo.forEach((_, i) => { CW_POS[`${x.id}:${i + 1}`] = ++n; });
+    else CW_POS[`${x.id}:0`] = ++n;
+  });
+}
 const FILTERS = [
   { key: "all", label: "Everything" },
   { key: "todo", label: "To watch" },
@@ -87,6 +96,22 @@ export default function StarWarsTracker() {
       const done = { ...prev.done };
       if (done[entry.id]) delete done[entry.id]; else done[entry.id] = true;
       return { ...prev, done };
+    });
+  };
+
+  const toggleGroup = (entries) => {
+    setState((prev) => {
+      const full = entries.every((en) => isComplete(en, prev));
+      const eps = { ...prev.eps };
+      const done = { ...prev.done };
+      entries.forEach((en) => {
+        if (en.eps > 0) {
+          if (full) delete eps[en.id];
+          else { const set = {}; for (let i = 1; i <= en.eps; i++) set[i] = true; eps[en.id] = set; }
+        } else if (full) delete done[en.id];
+        else done[en.id] = true;
+      });
+      return { ...prev, eps, done };
     });
   };
 
@@ -301,10 +326,57 @@ export default function StarWarsTracker() {
     );
   };
 
+  /* ---- Clone Wars group renderer: a heading, then every episode as its own row ---- */
+  const epPasses = (entry, n) => {
+    if (filter === "all") return true;
+    const c = entry.eps > 0 ? !!(state.eps[entry.id] || {})[n] : !!state.done[entry.id];
+    return filter === "done" ? c : !c;
+  };
+  const GroupBlock = (entry, showHead) => {
+    const members = LIST.filter((x) => x.group === entry.group);
+    const gp = progress(members, state);
+    const full = gp.done === gp.total;
+    const set = state.eps[entry.id] || {};
+    const rows = entry.eps > 0
+      ? entry.epInfo.map((ep, i) => ({ n: i + 1, code: ep.code, title: ep.title, on: !!set[i + 1], pos: CW_POS[`${entry.id}:${i + 1}`], pill: false }))
+      : [{ n: 0, code: "Movie", title: entry.title.replace("Star Wars: ", ""), on: !!state.done[entry.id], pos: CW_POS[`${entry.id}:0`], pill: true }];
+    const visible = rows.filter((r) => epPasses(entry, r.n));
+    if (visible.length === 0 && !showHead) return null;
+    return (
+      <div key={entry.id} data-entry={entry.id} className={`grp${flashRow === entry.id ? " rowFlash" : ""}`}>
+        {showHead && (
+          <div className="grpHead">
+            <span className="grpName">{entry.group}</span>
+            <span className="grpLine" />
+            <button className="grpAll" onClick={() => toggleGroup(members)}>{full ? "Clear" : "Mark all"}</button>
+            <span className="grpCount">{gp.done}/{gp.total}</span>
+          </div>
+        )}
+        {visible.map((r) => (
+          <button
+            key={r.n}
+            className={`gRow ${r.on ? "gRowOn" : ""}`}
+            aria-pressed={r.on}
+            aria-label={`${r.code} ${r.title}`}
+            onClick={() => (entry.eps > 0 ? toggleEp(entry.id, r.n) : toggleEntry(entry))}
+          >
+            <span className="gBox">{r.on ? "✓" : ""}</span>
+            <span className="gNum">{r.pos}</span>
+            <span className={`gPill ${r.pill ? "gPillMovie" : ""}`}>{r.code}</span>
+            <span className="gTitle">{r.title}</span>
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const renderSection = (sec, entries, prog, withNumbers) => {
-    const shown = entries.filter(passes);
+    // grouped entries show an episode row when ANY of their episodes matches the filter
+    const matches = (en) => (en.group ? (en.eps > 0 ? en.epInfo.some((_, i) => epPasses(en, i + 1)) : epPasses(en, 0)) : passes(en));
+    const shown = entries.filter(matches);
     if (shown.length === 0) return null;
     const open = secOpen[sec.key] !== false;
+    let prevGroup = null;
     return (
       <section key={sec.key} id={`sec-${sec.key}`} className={`phase${flashKey === sec.key ? " flash" : ""}`}>
         <div className="phaseHead">
@@ -314,7 +386,15 @@ export default function StarWarsTracker() {
           <button className="p0Toggle" aria-expanded={open} onClick={() => setSecOpen((x) => ({ ...x, [sec.key]: !open }))}>{open ? "Hide" : "Show"}</button>
         </div>
         <p className="p0Blurb">{sec.blurb}</p>
-        {open && shown.map((en) => Row(en, withNumbers ? numLabel(en.id) : null, sec.color))}
+        {open && shown.map((en) => {
+          if (en.group) {
+            const showHead = en.group !== prevGroup;
+            prevGroup = en.group;
+            return GroupBlock(en, showHead);
+          }
+          prevGroup = null;
+          return Row(en, withNumbers && sec.key !== "clonewars" ? numLabel(en.id) : null, sec.color);
+        })}
       </section>
     );
   };
@@ -326,7 +406,7 @@ export default function StarWarsTracker() {
   return (
     <div className="app">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         .app {
           min-height: 100vh; background: #07080C; color: #EDEEF4;
@@ -445,6 +525,30 @@ export default function StarWarsTracker() {
         .epAll { height: 32px; padding: 0 12px; border-radius: 8px; border: 1px dashed #3a4468; background: transparent;
                  color: #8B93AD; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; align-self: flex-start; margin-top: 4px; }
         .epAll:hover { color: #FFE347; border-color: #FFE347; }
+        .grp { margin: 0; }
+        .grpHead { display: flex; align-items: center; gap: 10px; margin: 26px 2px 6px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+        .grp:first-of-type .grpHead { margin-top: 14px; }
+        .grpName { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #8B93AD; flex: none; }
+        .grpLine { flex: 1; height: 1px; background: #1B212D; min-width: 12px; }
+        .grpCount { font-size: 11px; color: #5B6588; font-variant-numeric: tabular-nums; flex: none; }
+        .grpAll { background: none; border: 0; font: inherit; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #5B6588; cursor: pointer; padding: 2px 4px; border-radius: 4px; flex: none; }
+        .grpAll:hover { color: #FFE347; }
+        .grpAll:focus-visible, .gRow:focus-visible { outline: 2px solid #FFE347; outline-offset: 2px; }
+        .gRow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 6px; border: 0; border-radius: 10px; background: none; color: #EDEEF4;
+          font: inherit; font-size: 14px; text-align: left; cursor: pointer; transition: background .15s; }
+        .gRow:hover { background: rgba(255,255,255,.035); }
+        .gBox { width: 22px; height: 22px; flex: none; border-radius: 99px; border: 1.5px solid #2A3342; display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 700; color: #07080C; transition: background .2s, border-color .2s; }
+        .gRow:hover .gBox { border-color: #FFE347; }
+        .gRowOn .gBox { background: #FFE347; border-color: #FFE347; box-shadow: 0 0 8px rgba(255,227,71,.4); }
+        .gNum { flex: none; width: 26px; text-align: right; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px; color: #5B6588; font-variant-numeric: tabular-nums; }
+        .gPill { flex: none; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px;
+          border: 1px solid #2B4A7A; background: rgba(74,158,255,.1); color: #7DB4FF; letter-spacing: .02em; white-space: nowrap; min-width: 66px; text-align: center; }
+        .gPillMovie { border-color: #6B5A12; background: rgba(255,227,71,.1); color: #FFE347; }
+        .gTitle { flex: 1; min-width: 0; }
+        .gRowOn .gTitle { text-decoration: line-through; text-decoration-color: #5B6588; opacity: .6; }
+        .gRowOn .gNum, .gRowOn .gPill { opacity: .6; }
+        @media (max-width: 520px) { .gRow { gap: 9px; font-size: 13.5px; } .gNum { width: 22px; } }
         .empty { margin-top: 28px; padding: 18px; text-align: center; color: #8B93AD; border: 1px dashed #1E2430; border-radius: 14px; font-size: 14px; }
         /* footer */
         .upcoming { margin-top: 34px; padding: 12px 14px; border: 1px solid #1E2430; border-radius: 12px; background: #0F1218; font-size: 12.5px; color: #A9B0C8; line-height: 1.55; }
@@ -508,9 +612,21 @@ export default function StarWarsTracker() {
                 ) : (
                   <span>
                     {{ start: "Start with", continue: "Continue", next: "Up next" }[upNext.mode]}:{" "}
-                    <b>#{NUM[upNext.entry.id]} {upNext.entry.title}</b>
-                    {upNext.eps ? ` (${upNext.eps})` : ""}
-                    {upNext.nextEp ? ` — next: ${upNext.nextEp.code} ${upNext.nextEp.title}` : ""}
+                    {upNext.entry.group ? (
+                      <>
+                        <b>{upNext.entry.group}</b>
+                        {" — "}
+                        {upNext.mode === "continue" && upNext.nextEp
+                          ? `${upNext.nextEp.code} ${upNext.nextEp.title}`
+                          : upNext.entry.epInfo ? `${upNext.entry.epInfo[0].code} ${upNext.entry.epInfo[0].title}` : upNext.entry.title}
+                      </>
+                    ) : (
+                      <>
+                        <b>#{NUM[upNext.entry.id]} {upNext.entry.title}</b>
+                        {upNext.eps ? ` (${upNext.eps})` : ""}
+                        {upNext.nextEp ? ` — next: ${upNext.nextEp.code} ${upNext.nextEp.title}` : ""}
+                      </>
+                    )}
                   </span>
                 )}
                 {upNext.mode !== "end" && <span className="upNextGo">↓</span>}
